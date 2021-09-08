@@ -41,6 +41,58 @@ export default class BezierEdgeModel extends BaseEdgeModel {
     };
   }
 
+  // 自定义贝塞尔曲线控制点
+  getControlPoints() {
+    const { sNext, ePre } = this.getControls();
+
+    const { edges } = this.graphModel.modelToGraphData();
+
+    // 获得所有同节点的边
+    const curEdges = edges.filter(x => x.sourceNodeId === this.sourceNodeId
+      && x.targetNodeId === this.targetNodeId && x.type === ModelType.BEZIER_EDGE);
+
+    const sNextList = curEdges.map(x => x.pointsList[1]);
+    const ePreList = curEdges.map(x => x.pointsList[2]);
+
+    if (sNextList.filter(p => p.y < sNext.y).length > sNextList.filter(p => p.y > sNext.y).length) {
+      sNextList.forEach(p => {
+        if (p.y > sNext.y) {
+          sNext.x = p.x;
+          sNext.y = p.y;
+        }
+      });
+      sNext.y += 20;
+    } else {
+      sNextList.forEach(p => {
+        if (p.y < sNext.y) {
+          sNext.x = p.x;
+          sNext.y = p.y;
+        }
+      });
+      sNext.y -= 20;
+    }
+
+    if (ePreList.filter(p => p.y < ePre.y).length > ePreList.filter(p => p.y > ePre.y).length) {
+      ePreList.forEach(p => {
+        if (p.y > ePre.y) {
+          ePre.x = p.x;
+          ePre.y = p.y;
+        }
+      });
+      ePre.y += 20;
+    } else {
+      ePreList.forEach(p => {
+        if (p.y < ePre.y) {
+          ePre.x = p.x;
+          ePre.y = p.y;
+        }
+      });
+      ePre.y -= 20;
+    }
+
+    return { sNext, ePre };
+  }
+
   /* 获取贝塞尔曲线的控制点 */
   private getControls(): IBezierControls {
     const start = this.startPoint;
@@ -85,7 +137,7 @@ export default class BezierEdgeModel extends BaseEdgeModel {
       x: this.endPoint.x,
       y: this.endPoint.y,
     };
-    const { sNext, ePre } = this.getControls();
+    const { sNext, ePre } = this.getControlPoints();
     this.pointsList = [start, sNext, ePre, end];
     this.path = this.getPath(this.pointsList);
   }
