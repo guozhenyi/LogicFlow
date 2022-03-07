@@ -61,7 +61,7 @@ export default class BezierEdgeModel extends BaseEdgeModel {
           sNext.y = p.y;
         }
       });
-      sNext.y += 20;
+      sNext.y += 40;
     } else {
       sNextList.forEach(p => {
         if (p.y < sNext.y) {
@@ -69,7 +69,7 @@ export default class BezierEdgeModel extends BaseEdgeModel {
           sNext.y = p.y;
         }
       });
-      sNext.y -= 20;
+      sNext.y -= 40;
     }
 
     if (ePreList.filter(p => p.y < ePre.y).length > ePreList.filter(p => p.y > ePre.y).length) {
@@ -79,7 +79,7 @@ export default class BezierEdgeModel extends BaseEdgeModel {
           ePre.y = p.y;
         }
       });
-      ePre.y += 20;
+      ePre.y += 40;
     } else {
       ePreList.forEach(p => {
         if (p.y < ePre.y) {
@@ -87,7 +87,7 @@ export default class BezierEdgeModel extends BaseEdgeModel {
           ePre.y = p.y;
         }
       });
-      ePre.y -= 20;
+      ePre.y -= 40;
     }
 
     return { sNext, ePre };
